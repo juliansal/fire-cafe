@@ -5,9 +5,10 @@ export default class Cafes extends Component {
 	cafeList = (props) => {
 		let cafeList = props.cafeList.map(cafe => {
 			return (
-				<li onClick={this.handleClick} key={ cafe.id }>
+				<li data-key={ cafe.id } key={ cafe.id }>
 					<span>{ cafe.name }</span>
 					<span>{ cafe.city }</span>
+					<div onClick={ this.deleteCafe }>x</div>
 				</li>
 			)
 		});
@@ -15,8 +16,13 @@ export default class Cafes extends Component {
 		return cafeList;
 	}
 
-	handleClick = (e) => {
-		console.log(e.type);
+	deleteCafe = (e) => {
+		e.stopPropagation();
+		const db = this.props.store;
+		const docId = e.target.parentElement.getAttribute('data-key')
+		console.log(docId);
+
+		db.collection('cafes').doc(docId).delete();
 	}
 	
 	render() {

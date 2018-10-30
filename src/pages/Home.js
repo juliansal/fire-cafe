@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import firebase from "firebase";
 import Cafes from "../components/cafes";
+import CafeForm from "../components/cafeForm";
 
 firebase.initializeApp({
 	apiKey: "AIzaSyC-wghKecpcEYsw8ldzbR2_mrSNd-Ag5PY",
@@ -20,14 +21,18 @@ export default class Home extends Component {
 	}
 	
 	componentWillMount() {
-		this.loadCafes();
+		this.loadCafes('name');
 	}
 
-	loadCafes = () => {
+	
+
+	loadCafes = (order) => {
 		let cafes = [];
-		db.collection('cafes').get()
-			.then((snap) => {
-				snap.docs.forEach(doc => {
+		db.collection('cafes')
+			.orderBy(order)
+			.onSnapshot((snap) => {
+				snap.docChanges().forEach(({doc}) => {
+					console.log(doc.id);
 					cafes.push({
 						id: doc.id,
 						name: doc.data().name,
@@ -38,11 +43,22 @@ export default class Home extends Component {
 		});
 	}
 
+	orderBy = (e) => {
+		const order = e.target.getAttribute('data-order');
+		this.loadCafes(order);
+	}
+
 	render() {
 		return (
 			<div className="content">
-				<form id="add-cafe-form"></form>
-				<Cafes cafeList={ this.state.cafes } />
+				<CafeForm store={ db } />
+				<button 
+					onClick={ this.orderBy }
+					data-order="city">Order By City</button>
+				<button 
+					onClick={ this.orderBy }
+					data-order="name">Order By Cafe</button>
+				<Cafes store={ db } cafeList={ this.state.cafes } />
 			</div>
 		)
 	}
