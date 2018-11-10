@@ -3,7 +3,6 @@ import React, { Component } from "react";
 export default class CafeForm extends Component {
 
 	componentDidUpdate() {
-		console.log("Changed!!", this.props.passInputs.name);
 		let { cafe, city } = this.getInputFields();
 
 		cafe.value = this.props.passInputs.name || '';
@@ -22,6 +21,8 @@ export default class CafeForm extends Component {
 			}).then(() => {
 				cafe.value = '';
 				city.value = '';
+			}).catch(err => {
+				console.log(err);
 			});
 	}
 
@@ -30,13 +31,18 @@ export default class CafeForm extends Component {
 		const db = this.props.store;
 		let { cafe, city } = this.getInputFields();
 
-		db.collection('cafes').doc(this.props.passInputs.id).update({
-			name: cafe.value,
-			city: city.value
-		}).then(() => {
-			cafe.value = '';
-			city.value = '';
-		});
+		if(this.props.passInputs.id == true && this.props.passInputs.id != "") {
+			db.collection('cafes').doc(this.props.passInputs.id).update({
+				name: cafe.value,
+				city: city.value
+			}).then(() => {
+				cafe.value = '';
+				city.value = '';
+			}).catch(err => {
+				console.log(err);
+			});
+		}
+		
 	}
 
 	getInputFields = () => {

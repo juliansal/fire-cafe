@@ -48,6 +48,14 @@ export default class Home extends Component {
 							name: doc.data().name,
 							city: doc.data().city
 						});
+					} else if (change.type === "removed") {
+						this.setState({ 
+							formInputs: {
+								id: '',
+								name: '', 
+								city: '' 
+							}
+						});
 					}
 				})
 				this.setState({ cafes: cafes });
@@ -67,6 +75,8 @@ export default class Home extends Component {
 					city: city 
 				}
 			});
+		}).catch(err => {
+			console.log(err);
 		});
 		
 	}

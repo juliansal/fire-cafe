@@ -21,8 +21,14 @@ export default class Cafes extends Component {
 		const db = this.props.store;
 		const docId = e.target.parentElement.getAttribute('data-key');
 
-		db.collection('cafes').doc(docId).delete();
-		this.removeFromList(docId);
+		db.collection('cafes').doc(docId)
+			.delete()
+			.then(() => {
+				this.removeFromList(docId);
+			}).catch(err => {
+				console.log(err);
+			});
+		
 	}
 
 	removeFromList = (docId) => {
