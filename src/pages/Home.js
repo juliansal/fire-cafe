@@ -18,29 +18,57 @@ export default class Home extends Component {
 
 	state = {
 		cafes: [],
+		formInputs: {}
 	}
 	
 	componentWillMount() {
 		this.loadCafes('name');
 	}
 
-	
-
 	loadCafes = (order) => {
 		let cafes = [];
 		db.collection('cafes')
 			.orderBy(order)
 			.onSnapshot((snap) => {
-				snap.docChanges().forEach(({doc}) => {
-					console.log(doc.id);
-					cafes.push({
-						id: doc.id,
-						name: doc.data().name,
-						city: doc.data().city
-					});
+				snap.docChanges().forEach(change => {
+					let { doc } = change;
+					if(change.type === "added") {
+						cafes.push({
+							id: doc.id,
+							name: doc.data().name,
+							city: doc.data().city
+						});
+					} else if(change.type === "modified") {
+						let updated = cafes.findIndex(entry => {
+							return entry.id == doc.id;
+						})
+						cafes.splice(updated, 1);
+						cafes.push({
+							id: doc.id,
+							name: doc.data().name,
+							city: doc.data().city
+						});
+					}
 				})
 				this.setState({ cafes: cafes });
 		});
+	}
+
+	getEditableCafe = (e) => {
+		let editId = e.target.parentElement.getAttribute('data-key');
+		let docRef = db.collection('cafes').doc(editId);
+
+		docRef.get().then((doc) => {
+			let {name, city} = doc.data();
+			this.setState({ 
+				formInputs: {
+					id: doc.id,
+					name: name, 
+					city: city 
+				}
+			});
+		});
+		
 	}
 
 	orderBy = (e) => {
@@ -51,14 +79,14 @@ export default class Home extends Component {
 	render() {
 		return (
 			<div className="content">
-				<CafeForm store={ db } />
+				<CafeForm store={ db } passInputs={ this.state.formInputs } />
 				<button 
 					onClick={ this.orderBy }
 					data-order="city">Order By City</button>
 				<button 
 					onClick={ this.orderBy }
 					data-order="name">Order By Cafe</button>
-				<Cafes store={ db } cafeList={ this.state.cafes } />
+				<Cafes editCafe={ this.getEditableCafe } store={ db } cafeList={ this.state.cafes } />
 			</div>
 		)
 	}

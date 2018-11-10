@@ -50,7 +50,7 @@ li span:nth-child(2){
     color: #999;
 }
 
-li div{
+li > div{
     position: absolute;
     top: 0;
     right: 0px;
@@ -59,7 +59,11 @@ li div{
     text-align: center;
     padding: 10px 0;
     font-weight:  bold;
-    cursor:  pointer;
+	cursor:  pointer;
+}
+
+li div {
+	margin-bottom: 10px;
 }
 
 form input{

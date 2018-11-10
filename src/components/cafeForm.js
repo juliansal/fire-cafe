@@ -1,47 +1,63 @@
 import React, { Component } from "react";
 
 export default class CafeForm extends Component {
-	state = {
-		city: '',
-		cafe: ''
-	}
 
-	fieldChanged = (e) => {
-		let key = e.target.name;
-		this.setState({
-			[key]: e.target.value
-		});
+	componentDidUpdate() {
+		console.log("Changed!!", this.props.passInputs.name);
+		let { cafe, city } = this.getInputFields();
+
+		cafe.value = this.props.passInputs.name || '';
+		city.value = this.props.passInputs.city || '';
 	}
 
 	cafeSubmit = (e) => {
 		e.preventDefault();
 		const db = this.props.store;
+		let { cafe, city } = this.getInputFields();
 
 		db.collection('cafes')
 			.add({
-				city: this.state.city,
-				name: this.state.cafe
+				name: cafe.value,
+				city: city.value
 			}).then(() => {
-				this.setState({
-					city: '',
-					cafe: ''
-				});
-			})
+				cafe.value = '';
+				city.value = '';
+			});
+	}
 
+	updateCafe = (e) => {
+		e.preventDefault();
+		const db = this.props.store;
+		let { cafe, city } = this.getInputFields();
+
+		db.collection('cafes').doc(this.props.passInputs.id).update({
+			name: cafe.value,
+			city: city.value
+		}).then(() => {
+			cafe.value = '';
+			city.value = '';
+		});
+	}
+
+	getInputFields = () => {
+		let cafeList = document.getElementById("add-cafe-form");
+		let cafe = cafeList.querySelector('[name=cafe]');
+		let city = cafeList.querySelector('[name=city]');
+
+		return { cafeList, cafe, city }
 	}
 
 	render() {
 		return (
-			<form onSubmit={this.cafeSubmit} id="add-cafe-form">
+			<form id="add-cafe-form">
 				<input 
-					onChange={this.fieldChanged} 
-					value={ this.state.cafe }
+					defaultValue={ this.props.passInputs.name || '' }
 					type="text" name="cafe" placeholder="Cafe Name" />
 				<input 
-					onChange={this.fieldChanged} 
-					value={ this.state.city }
+					defaultValue={ this.props.passInputs.city || '' }
 					type="text" name="city" placeholder="Cafe City" />
-				<button>Add Cafe</button>
+				<button onClick={ this.cafeSubmit }>Add Cafe</button>
+				<button onClick={ this.updateCafe }>Update Cafe</button>
 			</form>
 		)
 	}
