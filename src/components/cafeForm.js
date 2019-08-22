@@ -31,7 +31,7 @@ export default class CafeForm extends Component {
 		const db = this.props.store;
 		let { cafe, city } = this.getInputFields();
 
-		if(this.props.passInputs.id == true && this.props.passInputs.id != "") {
+		if(this.props.passInputs.id === true && this.props.passInputs.id !== "") {
 			db.collection('cafes').doc(this.props.passInputs.id).update({
 				name: cafe.value,
 				city: city.value

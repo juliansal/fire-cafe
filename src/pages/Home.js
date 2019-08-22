@@ -40,7 +40,7 @@ export default class Home extends Component {
 						});
 					} else if(change.type === "modified") {
 						let updated = cafes.findIndex(entry => {
-							return entry.id == doc.id;
+							return entry.id === doc.id;
 						})
 						cafes.splice(updated, 1);
 						cafes.push({
