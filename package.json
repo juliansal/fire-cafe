@@ -15,7 +15,7 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
-		"test": "react-scripts test",
+		"test": "react-scripts test --detectOpenHandles --watchAll=false --forceExit",
 		"eject": "react-scripts eject",
 		"prettier-watch": "onchange '**/*.*' -- prettier --write {{changed}}"
 	},
