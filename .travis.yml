@@ -1,18 +1,18 @@
 language: node_js
 node_js:
-	- 11.6.0
+  - 11.6.0
 cache: npm
 
 install: 
-	- npm ci
+  - npm ci
 
 script:
-	- npm test
-	- npm run build
+  - npm test
+  - npm run build
 
 deploy:
-	provider: release
-	skip-cleanup: true
-	github-token: $GITHUB_TOKEN
-	on:
-		branch: master
+  provider: release
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  on:
+    branch: master
