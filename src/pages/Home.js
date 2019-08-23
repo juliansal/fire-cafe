@@ -12,7 +12,7 @@ firebase.initializeApp({
     messagingSenderId: "90384294266"
 });
 const db = firebase.firestore();
-db.settings({ timestampsInSnapshots: true });
+//db.settings({ timestampsInSnapshots: true });
 
 export default class Home extends Component {
 
@@ -20,8 +20,8 @@ export default class Home extends Component {
 		cafes: [],
 		formInputs: {}
 	}
-	
-	componentWillMount() {
+
+	componentDidMount() {
 		this.loadCafes('name');
 	}
 
