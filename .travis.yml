@@ -7,8 +7,8 @@ install:
   - npm install
 
 script:
-  - npm test
   - CI=false npm run build
+  - npm test
 
 deploy:
   provider: release
